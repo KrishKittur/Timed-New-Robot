@@ -29,7 +29,8 @@ public class Robot extends TimedRobot {
 
       @Override
       public void teleopInit() {
-        mo();
+        motorOne.setSmartCurrentLimit(4);
+        motorOne.setSecondaryCurrentLimit(5);
       }
 
       @Override
