@@ -30,14 +30,15 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
 
-      if (controller.getY(Hand.kLeft) > 0.1 || controller.getY(Hand.kLeft) < -0.1) {
-        motorOne.set(controller.getY(Hand.kLeft));
+      if (controller.getAButton()) {
+        motorOne.set(1);
       }
 
-      if (controller.getY(Hand.kRight) > 0.1 || controller.getY(Hand.kRight) < -0.1) {
-        motorTwo.set(controller.getY(Hand.kRight));
+      if (controller.getBButton()) {
+        motorTwo.set(1);
       }
 
     }
 
 }
+
