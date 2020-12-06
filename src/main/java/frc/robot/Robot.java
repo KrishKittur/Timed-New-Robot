@@ -37,10 +37,14 @@ public class Robot extends TimedRobot {
 
         if (controller.getAButton()) {
           motorOne.set(1);
+        } else {
+          motorOne.set(0);
         }
 
         if (controller.getBButton()) {
           motorTwo.set(1);
+        } else {
+          motorOne.set(0);
         }
 
       }
