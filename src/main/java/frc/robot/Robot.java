@@ -23,22 +23,27 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  */
 public class Robot extends TimedRobot {
 
-    CANSparkMax motorOne = new CANSparkMax(Ports.MOTOR_ONE_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-    CANSparkMax motorTwo = new CANSparkMax(Ports.MOTOR_TWO_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-    XboxController controller = new XboxController(Ports.CONTROLLER_CHANNEL);
+      CANSparkMax motorOne = new CANSparkMax(Ports.MOTOR_ONE_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+      CANSparkMax motorTwo = new CANSparkMax(Ports.MOTOR_TWO_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+      XboxController controller = new XboxController(Ports.CONTROLLER_CHANNEL);
 
-    @Override
-    public void teleopPeriodic() {
-
-      if (controller.getAButton()) {
-        motorOne.set(1);
+      @Override
+      public void teleopInit() {
+        mo();
       }
 
-      if (controller.getBButton()) {
-        motorTwo.set(1);
-      }
+      @Override
+      public void teleopPeriodic() {
 
-    }
+        if (controller.getAButton()) {
+          motorOne.set(1);
+        }
+
+        if (controller.getBButton()) {
+          motorTwo.set(1);
+        }
+
+      }
 
 }
 
