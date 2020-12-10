@@ -17,4 +17,7 @@ public class Ports {
     static double Ki = 0;
     static double Kd = 0;
     static double setPoint = 4000;
+
+    static double voltagePerRPM = 0;
+    static double staticBreakVoltage = 0;
 }

@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
       CANSparkMax motorFour = new CANSparkMax(Ports.MOTOR_FOUR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
       XboxController controller = new XboxController(Ports.CONTROLLER_CHANNEL);
       PIDController pid = new PIDController(Ports.Kp, Ports.Ki, Ports.Kd);
+      SimpleMotorFeedforward ff = new SimpleMotorFeedforward(Ports.staticBreakVoltage, Ports.voltagePerRPM);
       Encoder flyWheelEncoder = new Encoder(Ports.FLYWHEEL_ENCODER_CHANNEL_A, Ports.FLYWHEEL_ENCODER_CHANNEL_B);
       
       double velocity;
@@ -61,7 +62,7 @@ public class Robot extends TimedRobot {
 
           motorTwo.set(-1.00);
           motorThree.setVoltage(-1 * MathUtil.clamp(pid.calculate(flyWheelEncoder.getDistance(), Ports.setPoint), -12, 12));
-          motorFour.setVoltage( MathUtil.clamp(pid.calculate(flyWheelEncoder.getDistance(), Ports.setPoint), -12, 12));
+          motorFour.setVoltage(MathUtil.clamp((pid.calculate(flyWheelEncoder.getDistance(), Ports.setPoint) + ff.calculate(Ports.setPoint)), -12, 12));
 
         } else {
           motorTwo.set(0);
