@@ -10,9 +10,13 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpiutil.math.MathUtil;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,11 +32,20 @@ public class Robot extends TimedRobot {
       CANSparkMax motorThree = new CANSparkMax(Ports.MOTOR_THREE_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
       CANSparkMax motorFour = new CANSparkMax(Ports.MOTOR_FOUR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
       XboxController controller = new XboxController(Ports.CONTROLLER_CHANNEL);
+      PIDController pid = new PIDController(Ports.Kp, Ports.Ki, Ports.Kd);
+      Encoder flyWheelEncoder = new Encoder(Ports.FLYWHEEL_ENCODER_CHANNEL_A, Ports.FLYWHEEL_ENCODER_CHANNEL_B);
+      
+      double velocity;
 
       @Override
       public void teleopInit() {
         motorOne.setSmartCurrentLimit(4);
         motorOne.setSecondaryCurrentLimit(5);
+        pid.setTolerance(10);
+
+        flyWheelEncoder.setDistancePerPulse(Math.PI / 8192);
+        flyWheelEncoder.setMinRate(10);
+      
       }
 
       @Override
@@ -44,18 +57,18 @@ public class Robot extends TimedRobot {
           motorOne.set(0.00);
         }
 
-        if (controller.getTriggerAxis(Hand.kLeft) > 0.1) {
+        if (controller.getBButton()) {
+
           motorTwo.set(-1.00);
-          motorThree.set(-1 * controller.getTriggerAxis(Hand.kLeft));
-          motorFour.set(controller.getTriggerAxis(Hand.kLeft));
+          motorThree.setVoltage(-1 * MathUtil.clamp(pid.calculate(flyWheelEncoder.getDistance(), Ports.setPoint), -12, 12));
+          motorFour.setVoltage( MathUtil.clamp(pid.calculate(flyWheelEncoder.getDistance(), Ports.setPoint), -12, 12));
+
         } else {
           motorTwo.set(0);
-          motorThree.set(0);
-          motorFour.set(0);
-        }
-
+          motorThree.setVoltage(0);
+          motorFour.setVoltage(0);
+        }     
         
-
       }
 
 }
