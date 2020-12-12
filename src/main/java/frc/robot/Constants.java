@@ -1,7 +1,7 @@
+/* ====================================================== */
 package frc.robot;
 
-
-public class Ports {
+public class Constants {
 
     // Ports
     static int FLYWHEEL_ENCODER_CHANNEL_A = 0;
@@ -12,3 +12,4 @@ public class Ports {
     static int FLYWHEEL_MOTOR_2_ID = 23;
     static int CONTROLLER_CHANNEL = 0;
 }
+/* ====================================================== */
