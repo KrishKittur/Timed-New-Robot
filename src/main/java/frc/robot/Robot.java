@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
         
         // If the A button is held turn on the intake
         if (controller.getAButton()) {
-          intakeMotor.set(0.6);
+          intakeMotor.set(0.4);
         } else {
           intakeMotor.set(0);
         }
