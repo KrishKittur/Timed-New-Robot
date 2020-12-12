@@ -17,7 +17,7 @@ public class Robot extends TimedRobot {
       CANSparkMax flywheelMotor1 = new CANSparkMax(Constants.FLYWHEEL_MOTOR_1_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
       CANSparkMax flywheelMotor2 = new CANSparkMax(Constants.FLYWHEEL_MOTOR_2_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
       XboxController controller = new XboxController(Constants.CONTROLLER_CHANNEL);
-      Encoder flyWheelEncoder = new Encoder(Constants.FLYWHEEL_ENCODER_CHANNEL_A, Constants.FLYWHEEL_ENCODER_CHANNEL_B);
+      Encoder flyWheelEncoder = new Encoder(Constants.FLYWHEEL_ENCODER_CHANNEL_A, Constants.FLYWHEEL_ENCODER_CHANNEL_B, true);
       
       double velocity;
 
@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
         // Set setters such as current limits and distances
         intakeMotor.setSmartCurrentLimit(8);
         intakeMotor.setSecondaryCurrentLimit(10);
-        flyWheelEncoder.setDistancePerPulse(Math.PI * 2 / 8192);
+        flyWheelEncoder.setDistancePerPulse((Math.PI * 2)/8192);
         flyWheelEncoder.setMinRate(10);
       }
 
