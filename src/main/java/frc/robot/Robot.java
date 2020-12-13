@@ -13,20 +13,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 
       // Instantiate all of the hardware
-      CANSparkMax intakeMotor = new CANSparkMax(Constants.INTAKE_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-      CANSparkMax suckerMotor = new CANSparkMax(Constants.SUCKER_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+      CANSparkMax spindexerMotor = new CANSparkMax(Constants.SPINDEXER_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+      CANSparkMax acceleratorMotor = new CANSparkMax(Constants.ACCELERATOR_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
       CANSparkMax flywheelMotor1 = new CANSparkMax(Constants.FLYWHEEL_MOTOR_1_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
       CANSparkMax flywheelMotor2 = new CANSparkMax(Constants.FLYWHEEL_MOTOR_2_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
       XboxController controller = new XboxController(Constants.CONTROLLER_CHANNEL);
       Encoder flyWheelEncoder = new Encoder(Constants.FLYWHEEL_ENCODER_CHANNEL_A, Constants.FLYWHEEL_ENCODER_CHANNEL_B);
-      
-      double velocity;
 
+      
       @Override
       public void teleopInit() {
         // Set setters such as current limits and distances
-        intakeMotor.setSmartCurrentLimit(14);
-        intakeMotor.setSecondaryCurrentLimit(16);
+        spindexerMotor.setSmartCurrentLimit(14);
+        spindexerMotor.setSecondaryCurrentLimit(16);
 
       }
 
@@ -34,24 +33,17 @@ public class Robot extends TimedRobot {
       public void teleopPeriodic() {  
       
         // If the A button is held turn on the intake
-        if (controller.getAButton()) {
-          intakeMotor.set(0.6);
-        } else {
-          intakeMotor.set(0);
-        }
+        spindexerMotor.set(controller.getAButton() ? 0.6 : 0);
 
         // If the left trigger is held turn on the flywheel and sucker
-        if (controller.getTriggerAxis(Hand.kLeft) > 0.1) {
-          suckerMotor.set(-1);
-          flywheelMotor1.set(-1 * controller.getTriggerAxis(Hand.kLeft));
-          flywheelMotor2.set(controller.getTriggerAxis(Hand.kLeft));      
-        } else {
-          suckerMotor.set(0);
-          flywheelMotor1.set(0);
-          flywheelMotor2.set(0);
-        }
+        double leftTriggerVal = controller.getTriggerAxis(Hand.kLeft);
 
-        SmartDashboard.putNumber("Flywheel Distance", flyWheelEncoder.getRate() * 60); // Print out the flywheel encoders value 
+        flywheelMotor1.set(leftTriggerVal > 0.1 ? -1 * leftTriggerVal : 0);
+        flywheelMotor2.set(leftTriggerVal > 0.1 ? leftTriggerVal : 0);
+        acceleratorMotor.set(leftTriggerVal > 0.1 ? -1 : 0);
+
+        // Add the flywheels speed to the smart dashboard
+        SmartDashboard.putNumber("Flywheel Distance", flyWheelEncoder.getRate() * 60);
    }
 
 }
