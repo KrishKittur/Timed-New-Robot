@@ -13,61 +13,51 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpiutil.math.MathUtil;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
- * project.
- */
 public class Robot extends TimedRobot {
 
-      CANSparkMax motorOne = new CANSparkMax(Ports.MOTOR_ONE_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-      CANSparkMax motorTwo = new CANSparkMax(Ports.MOTOR_TWO_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-      CANSparkMax motorThree = new CANSparkMax(Ports.MOTOR_THREE_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-      CANSparkMax motorFour = new CANSparkMax(Ports.MOTOR_FOUR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-      XboxController controller = new XboxController(Ports.CONTROLLER_CHANNEL);
-      PIDController pid = new PIDController(Ports.Kp, Ports.Ki, Ports.Kd);
-      SimpleMotorFeedforward ff = new SimpleMotorFeedforward(Ports.staticBreakVoltage, Ports.voltagePerRPM);
-      Encoder flyWheelEncoder = new Encoder(Ports.FLYWHEEL_ENCODER_CHANNEL_A, Ports.FLYWHEEL_ENCODER_CHANNEL_B);
+      // Instantiating the hardware
+      CANSparkMax spindexerMotor = new CANSparkMax(Constants.SPINDEXER_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+      CANSparkMax acceleratorMotor = new CANSparkMax(Constants.ACCELERATOR_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+      CANSparkMax flywheelMotor1 = new CANSparkMax(Constants.FLYWHEEL_MOTOR_1_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+      CANSparkMax flywheelMotor2 = new CANSparkMax(Constants.FLYWHEEL_MOTOR_2_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+      XboxController controller = new XboxController(Constants.CONTROLLER_CHANNEL);
+      PIDController pid = new PIDController(Constants.KP, Constants.KI, Constants.KD);
+      SimpleMotorFeedforward ff = new SimpleMotorFeedforward(Constants.STATIC_BREAK_VOLTAGE, Constants.VOLTAGE_PER_RPM);
+      Encoder flywheelEncoder = new Encoder(Constants.FLYWHEEL_ENCODER_CHANNEL_A, Constants.FLYWHEEL_ENCODER_CHANNEL_B);
       
       double velocity;
 
       @Override
       public void teleopInit() {
-        motorOne.setSmartCurrentLimit(4);
-        motorOne.setSecondaryCurrentLimit(5);
+        // set Setters
+        spindexerMotor.setSmartCurrentLimit(4);
+        spindexerMotor.setSecondaryCurrentLimit(5);
         pid.setTolerance(10);
 
-        flyWheelEncoder.setDistancePerPulse(Math.PI / 8192);
-        flyWheelEncoder.setMinRate(10);
+        flywheelEncoder.setDistancePerPulse(Math.PI / 8192);
+        flywheelEncoder.setMinRate(10);
       
       }
 
       @Override
       public void teleopPeriodic() {
         
-        if (controller.getAButton()) {
-          motorOne.set(0.3);
-        } else {
-          motorOne.set(0.00);
-        }
+        // When the A button is pressed turn the spindexer on
+        spindexerMotor.set(controller.getAButton() ? 0.3 : 0);
 
+        // When the B button is pressed turn the shooter on
         if (controller.getBButton()) {
-
-          motorTwo.set(-1.00);
-          motorThree.setVoltage(-1 * MathUtil.clamp(pid.calculate(flyWheelEncoder.getDistance(), Ports.setPoint), -12, 12));
-          motorFour.setVoltage(MathUtil.clamp((pid.calculate(flyWheelEncoder.getDistance(), Ports.setPoint) + ff.calculate(Ports.setPoint)), -12, 12));
-
+          acceleratorMotor.set(-1.00);
+          flywheelMotor1.setVoltage(-1 * MathUtil.clamp(pid.calculate(flywheelEncoder.getDistance(), Constants.SETPOINT), -12, 12));
+          flywheelMotor2.setVoltage(MathUtil.clamp((pid.calculate(flywheelEncoder.getDistance(), Constants.SETPOINT) + ff.calculate(Constants.SETPOINT)), -12, 12));
         } else {
-          motorTwo.set(0);
-          motorThree.setVoltage(0);
-          motorFour.setVoltage(0);
+          acceleratorMotor.set(0);
+          flywheelMotor1.setVoltage(0);
+          flywheelMotor2.setVoltage(0);
         }     
         
       }
