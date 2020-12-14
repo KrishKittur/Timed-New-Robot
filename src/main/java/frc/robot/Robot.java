@@ -17,15 +17,15 @@ public class Robot extends TimedRobot {
       @Override
       public void teleopInit() {
         // Set setters
-        spindexerMotor.setSmartCurrentLimit(14);
-        spindexerMotor.setSecondaryCurrentLimit(16);
+        spindexerMotor.setSmartCurrentLimit(10);
+        spindexerMotor.setSecondaryCurrentLimit(12);
         spindexerEncoder.setDistancePerRotation(Constants.SPINDEXER_ENCODER_DPR);
       }
 
       @Override
       public void teleopPeriodic() {
         // If the A button is pressed spin the spindexer
-        spindexerMotor.set(controller.getAButton() ? 0.6 : 0);
+        spindexerMotor.set(controller.getAButton() ? 0.1 : 0);
 
         // Print out the spindexers encoders readings
         spindexerEncoder.getDistance();
