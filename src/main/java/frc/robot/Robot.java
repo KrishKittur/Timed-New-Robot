@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
 
@@ -20,15 +21,16 @@ public class Robot extends TimedRobot {
         spindexerMotor.setSmartCurrentLimit(10);
         spindexerMotor.setSecondaryCurrentLimit(12);
         spindexerEncoder.setDistancePerRotation(Constants.SPINDEXER_ENCODER_DPR);
+
+        // Set the spindexer motor to 0
+        spindexerMotor.set(0);
       }
 
       @Override
       public void teleopPeriodic() {
-        // If the A button is pressed spin the spindexer
-        spindexerMotor.set(controller.getAButton() ? 0.1 : 0);
-
         // Print out the spindexers encoders readings
-        spindexerEncoder.getDistance();
+        SmartDashboard.putNumber("Distance", -1 * spindexerEncoder.getDistance() % 360);
+
       }
 
 }
