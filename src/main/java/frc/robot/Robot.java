@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
       @Override
       public void teleopPeriodic() {
         // Print out the spindexers encoders readings
-        SmartDashboard.putNumber("Distance", -1 * spindexerEncoder.getDistance() % 360);
+        SmartDashboard.putNumber("Distance", spindexerEncoder.getDistance());
 
       }
 
