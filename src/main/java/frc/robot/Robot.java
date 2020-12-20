@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
       @Override
       public void teleopInit() {
         flyWheelEncoder.setReverseDirection(true);
-        flyWheelEncoder.setDistancePerPulse(1/8192);
+        flyWheelEncoder.setDistancePerPulse(1.0/8192.0);
       }
 
       @Override
