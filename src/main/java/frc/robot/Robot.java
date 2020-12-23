@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
         flywheelMotor2.set(leftTriggerVal > 0.1 ? leftTriggerVal : 0);
 
         // Add the flywheels speed to the smart dashboard
-        SmartDashboard.putNumber("Flywheel Speed", flyWheelEncoder.getRate() * 60);
+        SmartDashboard.putNumber("Flywheel Distance", flyWheelEncoder.getDistance());
    }
 
 }
